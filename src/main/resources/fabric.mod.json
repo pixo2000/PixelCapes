@@ -2,14 +2,13 @@
 	"schemaVersion": 1,
 	"id": "capes",
 	"version": "${version}",
-	"name": "Capes",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "PixelCapes",
+	"description": "Just some capes for me and friends...",
 	"authors": [
-		"Me!"
+		"pixo2000"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/pixo2000/PixelCapes"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/capes/icon.png",
