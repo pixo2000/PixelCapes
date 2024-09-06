@@ -25,12 +25,12 @@ public class Capes implements ModInitializer {
 		me.pixel.meteor.MeteorExecutor.init();
 		me.pixel.perk.Capes.init();
 		ClientTickEvents.END_CLIENT_TICK.register(me.pixel.perk.Capes::onTick);
-/*		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			dispatcher.register(ClientCommandManager.literal("reloadcapes").executes(context -> {
 				me.pixel.perk.Capes.init();
 				context.getSource().sendFeedback(Text.literal("Reloaded capes").formatted(Formatting.GREEN));
 				return 1;
 			}));
-		}); */
+		});
 	}
 }

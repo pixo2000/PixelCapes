@@ -2,10 +2,13 @@ package me.pixel.perk;
 
 import me.pixel.meteor.Http;
 import me.pixel.meteor.MeteorExecutor;
+import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +17,9 @@ import java.util.stream.Stream;
 
 
 public class Capes {
+    public static final String MOD_ID = "capes";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
     private static final String CAPE_OWNERS_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/main/capes/cape-zuweisung.txt";
     private static final String CAPES_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/main/capes/cape-links.txt";
 
@@ -26,6 +32,7 @@ public class Capes {
     private static final List<Cape> TO_REMOVE = new ArrayList<>();
 
     public static void init() {
+        LOGGER.info("Loading capes...");
         OWNERS.clear();
         URLS.clear();
         TEXTURES.clear();
@@ -38,10 +45,12 @@ public class Capes {
             Stream<String> lines = Http.get(CAPE_OWNERS_URL).sendLines();
             if (lines != null) lines.forEach(s -> {
                 String[] split = s.split(" ");
+                LOGGER.info("Cape owner: " + s);
 
                 if (split.length >= 2) {
                     OWNERS.put(UUID.fromString(split[0]), split[1]);
                     if (!TEXTURES.containsKey(split[1])) TEXTURES.put(split[1], new Cape(split[1]));
+                    LOGGER.info("got owner uuid");
                 }
             });
 
@@ -52,14 +61,17 @@ public class Capes {
 
                 if (split.length >= 2) {
                     if (!URLS.containsKey(split[0])) URLS.put(split[0], split[1]);
+                    LOGGER.info("got cape url");
                 }
             });
         });
+        onTick(MinecraftClient.getInstance());
 
 
     }
 
     public static void onTick(MinecraftClient minecraftClient) {
+        LOGGER.info("Tick");
         synchronized (TO_REGISTER) {
             for (Cape cape : TO_REGISTER) cape.register();
             TO_REGISTER.clear();
@@ -79,24 +91,36 @@ public class Capes {
 
             TO_REMOVE.clear();
         }
+        LOGGER.info("Tick end");
     }
 
     public static Identifier get(UUID player) {
+        LOGGER.info("Cape Start identifier");
         String capeName = OWNERS.get(player);
+        LOGGER.info("Cape Start identifier2");
         if (capeName != null) {
+            LOGGER.info("Cape Start identifier3");
             Cape cape = TEXTURES.get(capeName);
-            if (cape == null) return null;
+            LOGGER.info("Cape Start identifier4");
+            if (cape == null){
+                LOGGER.info("Cape End identifier False2");
+                return null;
+            }
 
             if (cape.isDownloaded()) return cape.identifier;
 
             cape.download();
+            LOGGER.info("Cape End identifier True");
             return null;
         }
-
+        LOGGER.info("Cape End identifier False");
         return null;
     }
 
     private static class Cape {
+        public static final String MOD_ID = "capes";
+        public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
         public Identifier identifier;
         private static int COUNT = 0;
 
@@ -135,7 +159,7 @@ public class Capes {
                         synchronized (TO_RETRY) {
                             TO_RETRY.add(this);
                             retryTimer = 10 * 20;
-                            downloading = false;
+                            downloading = true;
                             return;
                         }
                     }
