@@ -1,4 +1,5 @@
 # PixelCapes
+DON'T use this Code! You will Dos Github
 Yeah just some Cosmetics for me and friends
 
 ## How to use
