@@ -23,7 +23,7 @@ public class Capes implements ModInitializer {
 		ClientTickEvents.END_CLIENT_TICK.register(me.pixel.perk.Capes::onTick);
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			dispatcher.register(ClientCommandManager.literal("reloadcapes").executes(context -> {
-				me.pixel.perk.Capes.init();
+				me.pixel.perk.newcapes.init();
 				context.getSource().sendFeedback(Text.literal("Reloaded capes").formatted(Formatting.GREEN));
 				return 1;
 			}));

@@ -1,7 +1,5 @@
 package me.pixel.perk;
 
-import me.pixel.meteor.Http;
-import me.pixel.meteor.MeteorExecutor;
 import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
@@ -10,13 +8,18 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
-
-public class Capes {
+public class newcapes {
     public static final String MOD_ID = "capes";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
@@ -31,6 +34,8 @@ public class Capes {
     private static final List<Cape> TO_RETRY = new ArrayList<>();
     private static final List<Cape> TO_REMOVE = new ArrayList<>();
 
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
+
     public static void init() {
         LOGGER.info("Loading capes...");
         OWNERS.clear();
@@ -40,9 +45,9 @@ public class Capes {
         TO_RETRY.clear();
         TO_REMOVE.clear();
 
-        MeteorExecutor.execute(() -> {
+        executorService.execute(() -> {
             // Cape owners
-            Stream<String> lines = Http.get(CAPE_OWNERS_URL).sendLines();
+            List<String> lines = sendHttpRequest(CAPE_OWNERS_URL);
             if (lines != null) lines.forEach(s -> {
                 String[] split = s.split(" ");
                 LOGGER.info("Cape owner: " + s);
@@ -55,7 +60,7 @@ public class Capes {
             });
 
             // Capes
-            lines = Http.get(CAPES_URL).sendLines();
+            lines = sendHttpRequest(CAPES_URL);
             if (lines != null) lines.forEach(s -> {
                 String[] split = s.split(" ");
 
@@ -65,8 +70,6 @@ public class Capes {
                 }
             });
         });
-
-
     }
 
     public static void onTick(MinecraftClient minecraftClient) {
@@ -116,6 +119,21 @@ public class Capes {
         return null;
     }
 
+    private static List<String> sendHttpRequest(String urlString) {
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                return in.lines().collect(Collectors.toList());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private static class Cape {
         public static final String MOD_ID = "capes";
         public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -133,7 +151,7 @@ public class Capes {
         private int retryTimer;
 
         public Cape(String name) {
-            identifier = Identifier.of("capes/" + COUNT++);
+            identifier = new Identifier("capes", String.valueOf(COUNT++));
 
             this.name = name;
         }
@@ -142,7 +160,7 @@ public class Capes {
             if (downloaded || downloading || retryTimer > 0) return;
             downloading = true;
 
-            MeteorExecutor.execute(() -> {
+            executorService.execute(() -> {
                 try {
                     String url = URLS.get(name);
                     if (url == null) {
@@ -153,7 +171,7 @@ public class Capes {
                         }
                     }
 
-                    InputStream in = Http.get(url).sendInputStream();
+                    InputStream in = new URL(url).openStream();
                     if (in == null) {
                         synchronized (TO_RETRY) {
                             TO_RETRY.add(this);
