@@ -1,5 +1,4 @@
 # PixelCapes
-DON'T use this Code! You will Dos Github<br>
 Yeah just some Cosmetics for me and friends
 
 ## How to use
@@ -12,5 +11,5 @@ Then just join a Server and you should have a Cape
 Maybe i didn't give you one. Just message me on Discord(Xandarian) and ask for a cape!
 
 ### What is planned?
-A reload command / general Cape reloading<br>
+A reload command / general Cape reloading
 At this point, capes only reload on game restart

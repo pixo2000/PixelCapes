@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Flow;
 
-public record JsonBodyHandler<T>(HttpResponse.BodySubscriber<InputStream> delegate, Gson gson, Type type) implements HttpResponse.BodySubscriber<T> {
+public record JsonBodyHandler<T>(HttpResponse.BodySubscriber<InputStream> delegate, Gson gson,
+                                 Type type) implements HttpResponse.BodySubscriber<T> {
     public static <T> HttpResponse.BodyHandler<T> ofJson(Gson gson, Type type) {
         return responseInfo -> new JsonBodyHandler<>(HttpResponse.BodySubscribers.ofInputStream(), gson, type);
     }

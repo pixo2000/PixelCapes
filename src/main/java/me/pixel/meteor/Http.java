@@ -29,7 +29,15 @@ public class Http {
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
     private static final Gson GSON = new GsonBuilder()
-        .create();
+            .create();
+
+    public static Request get(String url) {
+        return new Request(Method.GET, url);
+    }
+
+    public static Request post(String url) {
+        return new Request(Method.POST, url);
+    }
 
     private enum Method {
         GET,
@@ -95,7 +103,8 @@ public class Http {
         }
 
         public Request ignoreExceptions() {
-            exceptionHandler = e -> {};
+            exceptionHandler = e -> {
+            };
             return this;
         }
 
@@ -162,13 +171,5 @@ public class Http {
         public <T> HttpResponse<T> sendJsonResponse(Type type) {
             return _sendResponse("*/*", JsonBodyHandler.ofJson(GSON, type));
         }
-    }
-
-    public static Request get(String url) {
-        return new Request(Method.GET, url);
-    }
-
-    public static Request post(String url) {
-        return new Request(Method.POST, url);
     }
 }
