@@ -27,7 +27,7 @@ public abstract class PlayerListEntryMixin {
 
     @Inject(method = "getSkinTextures", at = @At("HEAD"), cancellable = true)
     private void getSkinTexture(CallbackInfoReturnable<SkinTextures> cir) {
-        CapeAPI capeAPI = new CapeAPI();
+        CapeAPI capeAPI = CapeAPI.INSTANCE;
         capeAPI.isCapeOwner(profile.getId());
         Identifier cape2 = capeAPI.getIdentifiedCape(profile.getId());
         Identifier capeId = cape2 != null ? cape2 : texturesSupplier.get().capeTexture();

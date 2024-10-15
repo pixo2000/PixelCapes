@@ -14,15 +14,18 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class CapeAPI {
-    private final ArrayList<IdentifiedCape> cachedIdentifiedCapes = new ArrayList<>();
+    public static final CapeAPI INSTANCE = new CapeAPI();
+    private final List<IdentifiedCape> cachedIdentifiedCapes = new ArrayList<>();
     public final String MOD_ID = "capes";
     public final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     private static final String CAPE_OWNERS_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/main/capes/cape-zuweisung.txt";
     private final String CAPES_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/main/capes/cape-links.txt";
     private final Map<String, String> cachedURLs;
+    private final List<String> cachedUsers;
 
     public CapeAPI() {
         this.cachedURLs = new HashMap<>();
+        this.cachedUsers = new ArrayList<>();
     }
 
     //load cape from cache
@@ -40,8 +43,10 @@ public class CapeAPI {
         Stream<String> lines = Http.get(CAPES_URL).sendLines();
         if (lines != null) {
             lines.forEach(s -> {
-                String[] split = s.split(" ");
-                cachedURLs.computeIfAbsent(split[0], k -> split[1]);
+                if (!s.isEmpty()) {
+                    String[] split = s.split(" ");
+                    cachedURLs.computeIfAbsent(split[0], k -> split[1]);
+                }
             });
         }
         return cachedURLs.get(name);
@@ -52,19 +57,28 @@ public class CapeAPI {
         Identifier id = identifiedCape.identifier;
         NativeImage img = identifiedCape.nativeImage;
         MinecraftClient.getInstance().getTextureManager().registerTexture(id, new NativeImageBackedTexture(img));
-        cachedIdentifiedCapes.add(identifiedCape);
+        synchronized (cachedIdentifiedCapes) {
+            cachedIdentifiedCapes.add(identifiedCape);
+        }
     }
 
     // Does he have a cape
     public void isCapeOwner(UUID id) {
+        if(cachedUsers.contains(id.toString()))
+            return;
         Stream<String> lines = Http.get(CAPE_OWNERS_URL).sendLines();
         if (lines != null) {
             lines.forEach(s -> {
+                if(s.isEmpty())
+                    return;
                 String[] split = s.split(" ");
                 LOGGER.info("Player found(uuid + capename + ingamename): " + s);
                 if (split.length >= 2) {
                     NativeImage img = getImageThroughURL(getCapeUrl(split[1]));
                     register(new IdentifiedCape(img, new CapeOwner(img, id.toString())));
+                    synchronized (cachedUsers) {
+                        cachedUsers.add(id.toString());
+                    }
                 }
             });
         }
