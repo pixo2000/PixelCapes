@@ -6,6 +6,13 @@ wenn der client gestoppt wird, sender det client dem server einen befehl das er 
 das alles mit einem timeout von 1 stunde(wenn der server 1 stunde lang keinen ping vom client erhält, wird die ip aus der liste gelöscht)
 
 wenn es jetzt ein datenbank update gibt, wird der server alle ips in der liste anschreiben und den client auffordern das update zu installieren.
+auch bei jedem start wird einmal die lokale datenbank mit der online verglichen(z.B. über eine abfrage wann der lastest change war)
 
 
 das maybe noch mit discord webhooks etc
+
+
+
+
+
+Dringend fixen: CapeEventListener.java das er jedes mal wenn n player joint die capes reloaded
