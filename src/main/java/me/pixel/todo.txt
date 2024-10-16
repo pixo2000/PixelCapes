@@ -10,9 +10,3 @@ auch bei jedem start wird einmal die lokale datenbank mit der online verglichen(
 
 
 das maybe noch mit discord webhooks etc
-
-
-
-
-
-Dringend fixen: CapeEventListener.java das er jedes mal wenn n player joint die capes reloaded
