@@ -63,25 +63,8 @@ public class CapeAPI {
     }
 
     // Does he have a cape
-    public void isCapeOwner(UUID id) {
-        if(cachedUsers.contains(id.toString()))
-            return;
-        Stream<String> lines = Http.get(CAPE_OWNERS_URL).sendLines();
-        if (lines != null) {
-            lines.forEach(s -> {
-                if(s.isEmpty())
-                    return;
-                String[] split = s.split(" ");
-                LOGGER.info("Player found(uuid + capename + ingamename): " + s);
-                if (split.length >= 2) {
-                    NativeImage img = getImageThroughURL(getCapeUrl(split[1]));
-                    register(new IdentifiedCape(img, new CapeOwner(img, id.toString())));
-                    synchronized (cachedUsers) {
-                        cachedUsers.add(id.toString());
-                    }
-                }
-            });
-        }
+    public boolean isCapeOwner(UUID id) {
+        return cachedUsers.contains(id.toString());
     }
 
     // decode the Image
@@ -126,6 +109,28 @@ public class CapeAPI {
             return NativeImage.read(Base64Coder.decodeLines(data));
         } catch (Exception e) {
             throw new IOException("Unable to decode class type.", e);
+        }
+    }
+
+    public void loadCapes() {
+        cachedUsers.clear();
+        cachedIdentifiedCapes.clear();
+        cachedURLs.clear();
+        Stream<String> lines = Http.get(CAPE_OWNERS_URL).sendLines();
+        if (lines != null) {
+            lines.forEach(s -> {
+                if(s.isEmpty())
+                    return;
+                String[] split = s.split(" ");
+                LOGGER.info("Player found(uuid + capename + ingamename): " + s);
+                if (split.length >= 2) {
+                    NativeImage img = getImageThroughURL(getCapeUrl(split[1]));
+                    register(new IdentifiedCape(img, new CapeOwner(img, split[0])));
+                    synchronized (cachedUsers) {
+                        cachedUsers.add(split[0]);
+                    }
+                }
+            });
         }
     }
 }

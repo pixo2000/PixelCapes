@@ -1,2 +1,11 @@
-refresh
-sehen wer den mod nutzt
+Anti-Spam logik:
+
+jedes mal wenn man den mod startet, sendet der client meinem server(voidcube) einen befehl der besagt das der client gestartet wurde.
+wenn der server den befehl erhält, wird die ip des clients in eine liste geschrieben.
+wenn der client gestoppt wird, sender det client dem server einen befehl das er gestoppt wird und die ip wird aus der liste gelöscht.
+das alles mit einem timeout von 1 stunde(wenn der server 1 stunde lang keinen ping vom client erhält, wird die ip aus der liste gelöscht)
+
+wenn es jetzt ein datenbank update gibt, wird der server alle ips in der liste anschreiben und den client auffordern das update zu installieren.
+
+
+das maybe noch mit discord webhooks etc

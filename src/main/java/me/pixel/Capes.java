@@ -1,5 +1,6 @@
 package me.pixel;
 
+import me.pixel.event.CapeEventListener;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ public class Capes implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        CapeEventListener.register();
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             ;
         });

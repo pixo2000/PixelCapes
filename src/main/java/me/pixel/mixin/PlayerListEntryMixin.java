@@ -25,27 +25,29 @@ public abstract class PlayerListEntryMixin {
     @Shadow
     private GameProfile profile;
 
-    @Inject(method = "getSkinTextures", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getSkinTextures", at = @At("RETURN"), cancellable = true)
     private void getSkinTexture(CallbackInfoReturnable<SkinTextures> cir) {
-        CapeAPI capeAPI = CapeAPI.INSTANCE;
-        capeAPI.isCapeOwner(profile.getId());
-        Identifier cape2 = capeAPI.getIdentifiedCape(profile.getId());
-        Identifier capeId = cape2 != null ? cape2 : texturesSupplier.get().capeTexture();
-        Identifier skinId = texturesSupplier.get().texture();
-        SkinTextures.Model model = texturesSupplier.get().model();
-
-        if (cape2 != null) {
-            cir.setReturnValue(
-                    new SkinTextures(
-                            skinId,
-                            texturesSupplier.get().textureUrl(),
-                            capeId,
-                            texturesSupplier.get().elytraTexture(),
-                            model,
-                            texturesSupplier.get().secure()
-                    )
-            );
+        try {
+            CapeAPI capeAPI = CapeAPI.INSTANCE;
+            if (capeAPI.isCapeOwner(profile.getId())) {
+                Identifier customCape = capeAPI.getIdentifiedCape(profile.getId());
+                if (customCape != null) {
+                    SkinTextures originalTextures = cir.getReturnValue();
+                    cir.setReturnValue(
+                            new SkinTextures(
+                                    originalTextures.texture(),
+                                    originalTextures.textureUrl(),
+                                    customCape,
+                                    originalTextures.elytraTexture(),
+                                    originalTextures.model(),
+                                    originalTextures.secure()
+                            )
+                    );
+                }
+            }
+        } catch (Exception e) {
+            // Log the error or handle it appropriately
+            System.err.println("Error applying custom cape: " + e.getMessage());
         }
     }
-
 }
