@@ -1,6 +1,5 @@
 package me.pixel.perk;
 
-import me.pixel.meteor.Http;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -9,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Stream;
 import java.nio.file.Files;
@@ -71,11 +72,21 @@ public class CapeAPI {
     public boolean isCapeOwner(UUID id) {
         return cachedUsers.contains(id.toString());
     }
+
     public NativeImage getImageThroughURL(String URL) {
-        InputStream in = Http.get(URL).sendInputStream();
         NativeImage img;
         try {
-            img = NativeImage.read(in);
+            HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+
+            if (connection.getResponseCode() == 200) {
+                try (InputStream in = connection.getInputStream()) {
+                    img = NativeImage.read(in);
+                }
+            } else {
+                throw new IOException("Failed to fetch image, HTTP response code: " + connection.getResponseCode());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
