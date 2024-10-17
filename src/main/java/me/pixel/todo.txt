@@ -17,6 +17,7 @@ lokale anti-spam logik einbauen
 nutzungsbedingungen
 fixen das man sein eigenes cape net sieht
 server testen
+einbauen das wenn offline(keine server connection) capes eif disabled werden
 
 checken das das mit lokalen files auch so richtig ist
 checken das render immer bei client join is und net jeden frame um performance zu haben
