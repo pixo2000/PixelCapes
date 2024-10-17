@@ -25,6 +25,8 @@ nochmal für http filtern in capes.java um sicherzugehen das alles lokal is und 
 maybe später file save im mc ordner
 maybe files auf server speichern und später dann webseite oder json
 
+add license, readme, todo and roadmap and how to setup + use for clients and admins
+
 
 
 
