@@ -1,6 +1,5 @@
 package me.pixel.perk;
 
-import biz.source_code.base64Coder.Base64Coder;
 import me.pixel.meteor.Http;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
@@ -12,14 +11,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Stream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static me.pixel.perk.serverconnection.CONFIG_PATH;
 
 public class CapeAPI {
     public static final CapeAPI INSTANCE = new CapeAPI();
     private final List<IdentifiedCape> cachedIdentifiedCapes = new ArrayList<>();
     public final String MOD_ID = "capes";
     public final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    private static final String CAPE_OWNERS_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/main/capes/cape-zuweisung.txt";
-    private final String CAPES_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/main/capes/cape-links.txt";
+    private static final String CAPE_OWNERS_FILE = CONFIG_PATH + "/cape-zuweisung.txt";
+    private final String CAPES_FILE = CONFIG_PATH + "/cape-links.txt"; // datei verlinken
     private final Map<String, String> cachedURLs;
     private final List<String> cachedUsers;
 
@@ -28,7 +31,6 @@ public class CapeAPI {
         this.cachedUsers = new ArrayList<>();
     }
 
-    //load cape from cache
     public Identifier getIdentifiedCape(UUID id) {
         for (IdentifiedCape identifiedCape : cachedIdentifiedCapes) {
             if (identifiedCape.capeOwner.id().equals(id.toString())) {
@@ -38,9 +40,14 @@ public class CapeAPI {
         return null;
     }
 
-    //gets URL from URL List
     public String getCapeUrl(String name) {
-        Stream<String> lines = Http.get(CAPES_URL).sendLines();
+        Stream<String> lines;
+        try {
+            lines = Files.lines(Paths.get(CAPES_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
         if (lines != null) {
             lines.forEach(s -> {
                 if (!s.isEmpty()) {
@@ -52,7 +59,6 @@ public class CapeAPI {
         return cachedURLs.get(name);
     }
 
-    //cache cape and give it to the TextureManager
     public void register(IdentifiedCape identifiedCape) {
         Identifier id = identifiedCape.identifier;
         NativeImage img = identifiedCape.nativeImage;
@@ -62,27 +68,9 @@ public class CapeAPI {
         }
     }
 
-    // Does he have a cape
     public boolean isCapeOwner(UUID id) {
         return cachedUsers.contains(id.toString());
     }
-
-    // decode the Image
-    public NativeImage getCapeTexture(CapeRecord cape) {
-        try {
-            return ImageFromBase64(cape.textureURL());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public CapeRecord getCape(UUID id) {
-        //Send JSONDOC with UUID.
-        String outImg = "56345i4390oi543";
-        return null;
-    }
-
-    //get Image based on Webimage
     public NativeImage getImageThroughURL(String URL) {
         InputStream in = Http.get(URL).sendInputStream();
         NativeImage img;
@@ -94,29 +82,17 @@ public class CapeAPI {
         return img;
     }
 
-    //encode mechanic
-    public String ImageToBase64(NativeImage image) throws IllegalStateException {
-        try {
-            return Base64Coder.encodeLines(image.getBytes());
-        } catch (Exception e) {
-            throw new IllegalStateException("Image Error", e);
-        }
-    }
-
-    //Decode mechanic
-    public NativeImage ImageFromBase64(String data) throws IOException {
-        try {
-            return NativeImage.read(Base64Coder.decodeLines(data));
-        } catch (Exception e) {
-            throw new IOException("Unable to decode class type.", e);
-        }
-    }
-
     public void loadCapes() {
         cachedUsers.clear();
         cachedIdentifiedCapes.clear();
         cachedURLs.clear();
-        Stream<String> lines = Http.get(CAPE_OWNERS_URL).sendLines();
+        Stream<String> lines;
+        try {
+            lines = Files.lines(Paths.get(CAPE_OWNERS_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
         if (lines != null) {
             lines.forEach(s -> {
                 if(s.isEmpty())

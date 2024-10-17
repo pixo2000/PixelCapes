@@ -11,11 +11,11 @@ import java.nio.file.*;
 
 public class serverconnection implements ClientModInitializer {
 
-    private static final String CONFIG_PATH = System.getProperty("user.home") + "/minecraftordner/config/pixelcapes"; // ändern weil der pfad so net richtig is
-    private static final String FILE1_URL = "https://raw.githubusercontent.com/user/repo/branch/file1.json"; // Link zu deiner GitHub-Datei 1
-    private static final String FILE2_URL = "https://raw.githubusercontent.com/user/repo/branch/file2.json"; // Link zu deiner GitHub-Datei 2
-    private static final String SERVER_IP = "127.0.0.1"; // IP deines Servers
-    private static final int SERVER_PORT = 12345; // Port deines Servers
+    public static final String CONFIG_PATH = System.getProperty("user.home") + "/.pixelcapemod/config/";
+    private static final String CAPE_OWNERS_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/main/capes/cape-zuweisung.txt";
+    private static final String CAPE_LINKS_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/main/capes/cape-links.txt";
+    private static final String SERVER_IP = "0.0.0.0";
+    private static final int SERVER_PORT = 52798;
 
     private OkHttpClient client = new OkHttpClient();
     private Socket serverSocket;
@@ -24,27 +24,22 @@ public class serverconnection implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         try {
-            // Erstelle das Verzeichnis, wenn es nicht existiert
             Path configPath = Paths.get(CONFIG_PATH);
             if (!Files.exists(configPath)) {
                 Files.createDirectories(configPath);
             }
 
-            // Dateien beim Start downloaden
-            downloadFile(FILE1_URL, CONFIG_PATH + "/file1.json");
-            downloadFile(FILE2_URL, CONFIG_PATH + "/file2.json");
+            downloadFile(CAPE_OWNERS_URL, CONFIG_PATH + "/cape-zuweisung.txt");
+            downloadFile(CAPE_LINKS_URL, CONFIG_PATH + "/cape-links.txt");
 
-            // Verbindung zum Server herstellen und melden, dass der Client gestartet ist
             connectToServer();
 
-            // Server nach Updates lauschen
             listenForUpdates();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Bei Shutdown (Client wird geschlossen) dem Server melden
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (serverOut != null) {
                 serverOut.println("exit");
@@ -54,7 +49,6 @@ public class serverconnection implements ClientModInitializer {
         }));
     }
 
-    // Methode zum Download der Dateien
     private void downloadFile(String fileUrl, String outputPath) {
         Request request = new Request.Builder().url(fileUrl).build();
         try (Response response = client.newCall(request).execute()) {
@@ -76,7 +70,6 @@ public class serverconnection implements ClientModInitializer {
         }
     }
 
-    // Verbindung zum Server aufbauen
     private void connectToServer() {
         try {
             serverSocket = new Socket(SERVER_IP, SERVER_PORT);
@@ -89,7 +82,6 @@ public class serverconnection implements ClientModInitializer {
         }
     }
 
-    // Updates vom Server empfangen
     private void listenForUpdates() {
         new Thread(() -> {
             try (BufferedReader in = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()))) {
@@ -97,10 +89,8 @@ public class serverconnection implements ClientModInitializer {
                 while ((message = in.readLine()) != null) {
                     if (message.equalsIgnoreCase("update")) {
                         System.out.println("Update-Befehl erhalten. Dateien werden neu heruntergeladen...");
-                        downloadFile(FILE1_URL, CONFIG_PATH + "/file1.json");
-                        downloadFile(FILE2_URL, CONFIG_PATH + "/file2.json");
-
-                        // Hier kannst du den Code zum Neuladen der Capes einfügen
+                        downloadFile(CAPE_OWNERS_URL, CONFIG_PATH + "/cape-zuweisung.txt");
+                        downloadFile(CAPE_LINKS_URL, CONFIG_PATH + "/cape-links.txt");
                         reloadCapes();
                     }
                 }
@@ -110,13 +100,11 @@ public class serverconnection implements ClientModInitializer {
         }).start();
     }
 
-    // Capes neu laden (diese Methode musst du entsprechend der Cape-Logik implementieren)
     private void reloadCapes() {
+        CapeAPI.INSTANCE.loadCapes();
         System.out.println("Capes neu geladen!");
-        // Hier die Logik zum Neuladen der Capes implementieren
     }
 
-    // Verbindung zum Server schließen
     private void closeConnection() {
         try {
             if (serverSocket != null && !serverSocket.isClosed()) {

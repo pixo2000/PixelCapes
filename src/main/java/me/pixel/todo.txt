@@ -18,6 +18,13 @@ nutzungsbedingungen
 fixen das man sein eigenes cape net sieht
 server testen
 
+checken das das mit lokalen files auch so richtig ist
+checken das render immer bei client join is und net jeden frame um performance zu haben
+nochmal für http filtern in capes.java um sicherzugehen das alles lokal is und nix mehr mit meteor(halt einfach meteor kram ersetzen durch normales java)
+
+maybe später file save im mc ordner
+maybe files auf server speichern und später dann webseite oder json
+
 
 
 
