@@ -11,8 +11,13 @@ auch bei jedem start wird einmal die lokale datenbank mit der online verglichen(
 
 das maybe noch mit discord webhooks etc
 
-ich selbst bekomme das cape noch net
 
+
+lokale anti-apm logik einbauen
+nutzungsbedingungen
+error fix in capes.java
+fixen das man sein eigenes cape net sieht
+server testen
 
 
 
