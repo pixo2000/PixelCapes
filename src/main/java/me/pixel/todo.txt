@@ -13,9 +13,8 @@ das maybe noch mit discord webhooks etc
 
 
 
-lokale anti-apm logik einbauen
+lokale anti-spam logik einbauen
 nutzungsbedingungen
-error fix in capes.java
 fixen das man sein eigenes cape net sieht
 server testen
 
