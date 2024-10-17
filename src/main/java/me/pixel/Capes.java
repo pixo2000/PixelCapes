@@ -17,9 +17,7 @@ public class Capes implements ModInitializer {
     @Override
     public void onInitialize() {
         CapeEventListener.register();
+        serverconnection serverconnection = new serverconnection();
         serverconnection.onInitializeClient();
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            ;
-        });
     }
 }
