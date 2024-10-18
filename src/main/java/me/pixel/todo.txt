@@ -30,6 +30,8 @@ add license, readme, todo and roadmap and how to setup + use for clients and adm
 
 
 
+GANZES SYSTEM NEU CODEN
+
 
 
 Später:

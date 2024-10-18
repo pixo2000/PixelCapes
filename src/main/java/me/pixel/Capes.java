@@ -1,7 +1,5 @@
 package me.pixel;
 
-import me.pixel.event.CapeEventListener;
-import me.pixel.perk.serverconnection;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +13,7 @@ public class Capes implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        CapeEventListener.register();
-        serverconnection serverconnection = new serverconnection();
-        serverconnection.onInitializeClient();
+        // init here
         LOGGER.info("Capes Mod initialized");
     }
 }
