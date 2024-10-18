@@ -25,6 +25,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 // https://mvnrepository.com/artifact/org.yaml/snakeyaml
 	implementation group: 'org.yaml', name: 'snakeyaml', version: '1.8'
+	//Stuff for http requests and so on
 	implementation 'com.squareup.okhttp3:okhttp:4.9.3'
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"

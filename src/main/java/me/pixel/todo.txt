@@ -1,30 +1,30 @@
-Anti-Spam logik:
+ALT:    Anti-Spam logik:
 
-jedes mal wenn man den mod startet, sendet der client meinem server(voidcube) einen befehl der besagt das der client gestartet wurde.
-wenn der server den befehl erhält, wird die ip des clients in eine liste geschrieben.
-wenn der client gestoppt wird, sender det client dem server einen befehl das er gestoppt wird und die ip wird aus der liste gelöscht.
-das alles mit einem timeout von 1 stunde(wenn der server 1 stunde lang keinen ping vom client erhält, wird die ip aus der liste gelöscht)
+        jedes mal wenn man den mod startet, sendet der client meinem server(voidcube) einen befehl der besagt das der client gestartet wurde.
+        wenn der server den befehl erhält, wird die ip des clients in eine liste geschrieben.
+        wenn der client gestoppt wird, sender det client dem server einen befehl das er gestoppt wird und die ip wird aus der liste gelöscht.
+        das alles mit einem timeout von 1 stunde(wenn der server 1 stunde lang keinen ping vom client erhält, wird die ip aus der liste gelöscht)
 
-wenn es jetzt ein datenbank update gibt, wird der server alle ips in der liste anschreiben und den client auffordern das update zu installieren.
-auch bei jedem start wird einmal die lokale datenbank mit der online verglichen(z.B. über eine abfrage wann der lastest change war)
-
-
-das maybe noch mit discord webhooks etc
+        wenn es jetzt ein datenbank update gibt, wird der server alle ips in der liste anschreiben und den client auffordern das update zu installieren.
+        auch bei jedem start wird einmal die lokale datenbank mit der online verglichen(z.B. über eine abfrage wann der lastest change war)
 
 
+        das maybe noch mit discord webhooks etc
 
-lokale anti-spam logik einbauen
-nutzungsbedingungen
-fixen das man sein eigenes cape net sieht
-server testen
-einbauen das wenn offline(keine server connection) capes eif disabled werden
 
-checken das das mit lokalen files auch so richtig ist
-checken das render immer bei client join is und net jeden frame um performance zu haben
 
-maybe später file save im mc ordner
-capes lokal speichern?
-maybe files auf server speichern und später dann webseite oder json
+        lokale anti-spam logik einbauen
+        nutzungsbedingungen
+        fixen das man sein eigenes cape net sieht
+        server testen
+        einbauen das wenn offline(keine server connection) capes eif disabled werden
+
+        checken das das mit lokalen files auch so richtig ist
+        checken das render immer bei client join is und net jeden frame um performance zu haben
+
+        maybe später file save im mc ordner
+        capes lokal speichern?
+        maybe files auf server speichern und später dann webseite oder json
 
 add license, readme, todo and roadmap and how to setup + use for clients and admins
 
@@ -36,3 +36,32 @@ GANZES SYSTEM NEU CODEN
 
 Später:
 Animated capes und andere cosmetics
+
+
+
+
+
+capes zuweisen, init einbauen, server connection maneger einbauen, cape render
+
+
+
+
+
+ich will einen minecraft fabric 1.21 mod coden mit dem ich spielern capes zuweisen kann. der aufbau des mods:
+sobald der mod gestartet wird, werden 2 dateien von github gedownloadet und im minecraft config ordner gespeichert.
+dann sendet der mod dem server ein signal, das der client gestartet wurde. jetzt ist der client gestartet.
+wenn der spieler jetzt auf einem minecraft server beitritt, startet die überprüfung.
+
+die überprüfung:
+dies wird für alle spieler in der render-distance ausgeführt. sobald ein spieler überprüft wurde, wird er einer liste hinzugefügt. spieler auf dieser liste werden nicht überprüft.
+jetzt wird jedes mal, wenn ein spieler der nicht auf der liste steht in der render-distance gerendert wird in der 1. datei überprüft, ob seine uuid in der datei steht.
+die datei ist so aufgebaut: <uuid> <capename>
+wenn der spieler in der datei steht, wird der capename in der 2. datei überprüft. die 2. datei ist so aufgebaut: <capename> <url>
+die url ist ein direkter link zu einer png datei die minecraft als cape verwenden kann.
+jetzt wird dem spieler das cape zugewiesen.
+
+wenn ein spieler die render-distance verlässt, wird er aus der liste entfernt.
+
+falls der client vom server den befehl "update" erhält, werden alle spieler von der liste entfernt, die dateien neu gedownloaded und die überprüfung startet neu. das ist dafür da, falls sich die dateien ändern und andere spieler capes bekommen.
+
+beim beenden das spiels, sendet der client dem server einen befehl, das der client beendet wurde. jetzt ist der client beendet.eibe mir genau schritt für schritt wie ich den mod programmieren soll. ich habe noch nie einen mod programmiert und habe keine ahnung von java. ich habe aber schon ein paar mal in python programmiert.
