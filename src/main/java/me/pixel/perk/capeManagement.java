@@ -1,16 +1,23 @@
 package me.pixel.perk;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.io.File;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 
 import static me.pixel.perk.configs.*;
 
@@ -92,6 +99,38 @@ public class capeManagement {
     // Weise dem Spieler das Cape zu
     private static void assignCapeToPlayer(PlayerEntity player, String capeUrl) {
         // TODO: Implementiere die Logik, um das Cape über die URL zuzuweisen
-        System.out.println("Weise Cape zu: " + capeUrl + " für Spieler " + player.getName());
+        try {
+            // Lade das Cape von der URL herunter
+            Identifier capeIdentifier = downloadCape(capeUrl, player.getUuidAsString());
+
+            // Wechsle die Cape-Textur des Spielers
+            applyCapeToPlayer((AbstractClientPlayerEntity) player, capeIdentifier);
+            System.out.println("Cape zugewiesen: " + capeUrl + " für Spieler " + player.getName().getString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Lade das Cape von der URL herunter und speichere es in einem temporären Verzeichnis
+    private static Identifier downloadCape(String capeUrl, String playerUuid) throws Exception {
+        URL url = new URL(capeUrl);
+        InputStream in = url.openStream();
+        String capePath = CONFIG_PATH + playerUuid + "_cape.png";
+        Files.copy(in, Paths.get(capePath), StandardCopyOption.REPLACE_EXISTING);
+        in.close();
+
+        // Lade die Cape-Textur in Minecraft
+        Identifier capeIdentifier = new Identifier("pixelcapes", "textures/capes/" + playerUuid + "_cape.png");
+        MinecraftClient.getInstance().getTextureManager().registerTexture(capeIdentifier, new net.minecraft.client.texture.NativeImageBackedTexture(Files.readAllBytes(Paths.get(capePath))));
+
+        return capeIdentifier;
+    }
+
+
+    // Weise dem Spieler die heruntergeladene Cape-Textur zu
+    private static void applyCapeToPlayer(AbstractClientPlayerEntity player, Identifier capeIdentifier) {
+        PlayerEntityRenderer renderer = (PlayerEntityRenderer) MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(player);
+        renderer.setCapeTexture(capeIdentifier);
     }
 }
