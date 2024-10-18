@@ -44,6 +44,8 @@ Animated capes und andere cosmetics
 capes zuweisen, init einbauen, server connection maneger einbauen, cape render
 mixins und entrypoint net vergessen
 
+wieder hd capes
+
 
 
 
