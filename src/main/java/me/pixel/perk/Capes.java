@@ -10,6 +10,8 @@ import net.minecraft.util.Identifier;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 
@@ -17,13 +19,13 @@ public class Capes {
     private static final String CAPE_OWNERS_URL = "http://voidcube.de/capes/cape-zuweisung.txt";
     private static final String CAPES_URL = "http://voidcube.de/capes/cape-links.txt";
 
-    private static final Map<UUID, String> OWNERS = new HashMap<>();
-    private static final Map<String, String> URLS = new HashMap<>();
-    private static final Map<String, Cape> TEXTURES = new HashMap<>();
+    private static final Map<UUID, String> OWNERS = new ConcurrentHashMap<>();
+    private static final Map<String, String> URLS = new ConcurrentHashMap<>();
+    private static final Map<String, Cape> TEXTURES = new ConcurrentHashMap<>();
 
-    private static final List<Cape> TO_REGISTER = new ArrayList<>();
-    private static final List<Cape> TO_RETRY = new ArrayList<>();
-    private static final List<Cape> TO_REMOVE = new ArrayList<>();
+    private static final List<Cape> TO_REGISTER = new CopyOnWriteArrayList<>();
+    private static final List<Cape> TO_RETRY = new CopyOnWriteArrayList<>();
+    private static final List<Cape> TO_REMOVE = new CopyOnWriteArrayList<>();
 
     public static void init() {
         OWNERS.clear();

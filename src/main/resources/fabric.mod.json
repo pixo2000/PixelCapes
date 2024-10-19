@@ -16,6 +16,9 @@
 	"entrypoints": {
 		"main": [
 			"me.pixel.Capes"
+		],
+		"preLaunch": [
+			"me.pixel.perk.PreLaunch"
 		]
 	},
 	"mixins": [
