@@ -123,7 +123,7 @@ public class capeManagement {
 
         // Lade die Cape-Textur in Minecraft (absoluter Pfad)
         NativeImageBackedTexture texture = new NativeImageBackedTexture(NativeImage.read(Files.newInputStream(Paths.get(capePath))));
-        Identifier capeIdentifier = new Identifier("pixelcapes", playerUuid + "_cape"); // Kein textures/capes/ Pfad nötig
+        Identifier capeIdentifier = Identifier.of("pixelcapes", playerUuid + "_cape"); // Kein textures/capes/ Pfad nötig
 
         // Registriere die Textur mit dem TextureManager
         MinecraftClient.getInstance().getTextureManager().registerTexture(capeIdentifier, texture);
