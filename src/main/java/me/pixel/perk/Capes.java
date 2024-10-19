@@ -14,8 +14,8 @@ import java.util.stream.Stream;
 
 
 public class Capes {
-    private static final String CAPE_OWNERS_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/main/capes/cape-zuweisung.txt";
-    private static final String CAPES_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/main/capes/cape-links.txt";
+    private static final String CAPE_OWNERS_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/refs/heads/main/capes/cape-zuweisung.txt";
+    private static final String CAPES_URL = "https://raw.githubusercontent.com/pixo2000/Mod-Data/refs/heads/main/capes/cape-links.txt";
 
     private static final Map<UUID, String> OWNERS = new HashMap<>();
     private static final Map<String, String> URLS = new HashMap<>();
