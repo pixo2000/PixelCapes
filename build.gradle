@@ -16,6 +16,11 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+	maven {
+		name = "Local File Repository"
+		url "file://${rootDir}/lib"
+		metadataSources { artifact() }
+	}
 }
 
 dependencies {
@@ -28,7 +33,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	//network shit
-	modImplementation files("net-api-minified-1.0.0-SNAPSHOT.jar")
+	modImplementation include("eu.bycing:net-api-minified:1.0.0-SNAPSHOT")
 	
 }
 

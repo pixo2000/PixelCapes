@@ -38,6 +38,7 @@ public class Capes {
         MeteorExecutor.execute(() -> {
             // Cape owners
             Stream<String> lines = Http.get(CAPE_OWNERS_URL).sendLines();
+            System.out.println(String.join("\n", lines.toList()));
             if (lines != null) lines.forEach(s -> {
                 String[] split = s.split(" ");
 
@@ -49,6 +50,7 @@ public class Capes {
 
             // Capes
             lines = Http.get(CAPES_URL).sendLines();
+            System.out.println(String.join("\n", lines.toList()));
             if (lines != null) lines.forEach(s -> {
                 String[] split = s.split(" ");
 
@@ -155,6 +157,7 @@ public class Capes {
 
         public void register() {
             MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, new NativeImageBackedTexture(img));
+            System.out.println("Registered cape " + name);
             img = null;
 
             downloading = false;
