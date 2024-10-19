@@ -16,6 +16,8 @@ import java.io.File;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -62,7 +64,7 @@ public class capeManagement {
 
     // Suche den Cape-Namen anhand der UUID des Spielers in Datei 1
     private static String getCapeNameFromUuid(UUID uuid) {
-        File file = new File("config/pixelcapes/uuid-capes.txt");
+        File file = new File(CONFIG_PATH + CAPE_OWNERS_FILE);
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             for (String line : lines) {
@@ -80,7 +82,7 @@ public class capeManagement {
 
     // Suche die Cape-URL anhand des Cape-Namens in Datei 2
     private static String getCapeUrlFromName(String capeName) {
-        File file = new File("config/pixelcapes/capes-list.txt");
+        File file = new File(CONFIG_PATH + CAPE_LINKS_FILE);
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             for (String line : lines) {
@@ -112,25 +114,28 @@ public class capeManagement {
     }
 
 
-    // Lade das Cape von der URL herunter und speichere es in einem temporären Verzeichnis
     private static Identifier downloadCape(String capeUrl, String playerUuid) throws Exception {
         URL url = new URL(capeUrl);
         InputStream in = url.openStream();
-        String capePath = CONFIG_PATH + playerUuid + "_cape.png";
+        String capePath = CONFIG_PATH + playerUuid + "_cape.png"; // Pfad, wo das Cape gespeichert wird
         Files.copy(in, Paths.get(capePath), StandardCopyOption.REPLACE_EXISTING);
         in.close();
 
-        // Lade die Cape-Textur in Minecraft
-        Identifier capeIdentifier = new Identifier("pixelcapes", "textures/capes/" + playerUuid + "_cape.png");
-        MinecraftClient.getInstance().getTextureManager().registerTexture(capeIdentifier, new net.minecraft.client.texture.NativeImageBackedTexture(Files.readAllBytes(Paths.get(capePath))));
+        // Lade die Cape-Textur in Minecraft (absoluter Pfad)
+        NativeImageBackedTexture texture = new NativeImageBackedTexture(NativeImage.read(Files.newInputStream(Paths.get(capePath))));
+        Identifier capeIdentifier = new Identifier("pixelcapes", playerUuid + "_cape"); // Kein textures/capes/ Pfad nötig
+
+        // Registriere die Textur mit dem TextureManager
+        MinecraftClient.getInstance().getTextureManager().registerTexture(capeIdentifier, texture);
 
         return capeIdentifier;
     }
 
 
+
     // Weise dem Spieler die heruntergeladene Cape-Textur zu
     private static void applyCapeToPlayer(AbstractClientPlayerEntity player, Identifier capeIdentifier) {
         PlayerEntityRenderer renderer = (PlayerEntityRenderer) MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(player);
-        renderer.setCapeTexture(capeIdentifier);
+        renderer.getModel().setCapeTexture(capeIdentifier);
     }
 }
