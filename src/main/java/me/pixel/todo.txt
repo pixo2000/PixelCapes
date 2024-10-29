@@ -1,36 +1,33 @@
-Anti-Spam logik:
+ich will einen minecraft mod coden mit folgenden funktionen:
+mit dem playerlistmixin werden die spieler erkannt und dann überprüft. wenn sie in der datenbank des servers ein cape haben, sollen sie es bekommen. man soll auch die spieler auf den kopf stellen können und ihnen wie deadmaus5 große ohren geben können oder dem cape den chanted glint geben kann. sehr wichtig: ich brauche auch eine reload funktion.
 
-jedes mal wenn man den mod startet, sendet der client meinem server(voidcube) einen befehl der besagt das der client gestartet wurde.
-wenn der server den befehl erhält, wird die ip des clients in eine liste geschrieben.
-wenn der client gestoppt wird, sender det client dem server einen befehl das er gestoppt wird und die ip wird aus der liste gelöscht.
-das alles mit einem timeout von 1 stunde(wenn der server 1 stunde lang keinen ping vom client erhält, wird die ip aus der liste gelöscht)
+erkläre mir ganz genau wie ich es programmieren soll, mit client und serverseite, datenstruktur und jeden files. der mod ist für fabric 1.21
+die datei soll per http von meinem webserver abgefragt werden. die spieler werden per uuid überprüft.
+es soll auch animated capes geben die dann einfach aufgebaut sind wie cape texturen als gif
 
-wenn es jetzt ein datenbank update gibt, wird der server alle ips in der liste anschreiben und den client auffordern das update zu installieren.
-auch bei jedem start wird einmal die lokale datenbank mit der online verglichen(z.B. über eine abfrage wann der lastest change war)
+es soll eine verbindung mit einem server geben damit ich mit einem command einen befehl senden kann der an alle clients geschickt wird der überall nen reload auflöst.
+ich als owner habe einen command /pixelcapes <code> set <playername> cape/ears/flipped true/false/texturelink
+wenn es den player noch net gibt wird er entfernt und wenn ich gar keine sache mehr true hab und keine textur, wird er gelöscht. maybe später so das es auch infos gibt wer welches cape besitzt(später)
+der code ist einfach ein token wie google authenticator
 
+schreibe den gesamten code für jedes file mit imports etc und schreibe auch den teil zum rendern der sachen
 
-das maybe noch mit discord webhooks etc
+teile es schön übersichtlich in verschiedene dateien auf und achte darauf nur gültige java packets zu importieren
 
-
-
-lokale anti-spam logik einbauen
-nutzungsbedingungen
-fixen das man sein eigenes cape net sieht
-server testen
-einbauen das wenn offline(keine server connection) capes eif disabled werden
-
-checken das das mit lokalen files auch so richtig ist
-checken das render immer bei client join is und net jeden frame um performance zu haben
-
-maybe später file save im mc ordner
-capes lokal speichern?
-maybe files auf server speichern und später dann webseite oder json
-
-add license, readme, todo and roadmap and how to setup + use for clients and admins
-
-
-
-
-
-Später:
-Animated capes und andere cosmetics
+die datei auf dem server mit der zuweisung soll so sein:
+{
+    "players": {
+        "<player1_name>": {
+            "uuid": "playeruuid",
+            "cape": true,
+            "ears": false,
+            "flipped": false,
+            "enchanted_cape": false,
+            "cape_texture": "direkter link zur textur",
+            "ears_texture": null
+        },
+            "<player2_name>": {
+                ...
+            }
+    }
+}
