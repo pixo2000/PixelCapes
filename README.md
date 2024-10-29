@@ -24,7 +24,7 @@ Every user can see Capes, Deadmaus5 Ears and can be flipped. Just like on Minecr
 
 Server:<br>
 Is not a minecraft, but a webserver wich hosts a database with files like this: <br>
-http://voidcube.de/capes/user/<name>.json
+http://voidcube.de/capes/user/name.json
 ````
 {
     "name": "name",
@@ -75,7 +75,7 @@ the password is something like the current time(utc time) minus 10 minutes, so i
 on every correct/uncorrect password, the user and the action is sent to a discord webhook<br>
 the upload has an error if a cape in the folder already has the name and delete has a confirmation(have to repeat command in 5 seconds)<br>
 It needs a connection between the server and the client, so if i run the update command, every client refreshes the capes clientside<br>
-the "get player" command just puts the http://voidcube.de/capes/user/<name>.json output in my chat<br>
+the "get player" command just puts the http://voidcube.de/capes/user/name.json output in my chat<br>
 
 
 no - there is no feature for the users to set their own capes, only i can do that
