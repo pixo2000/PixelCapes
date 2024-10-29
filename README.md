@@ -22,6 +22,7 @@ Client:<br>
 1.21 fabric(compatible with wavey capes)<br>
 Every user can see Capes, Deadmaus5 Ears and can be flipped. Just like on Minecraftcapes.net(also animated, more than normal resolution, glint etc) <br>
 -> Resolution look at main branch the "Reload" Class <br>
+Does NOT give bots cosmetics and stuff
 
 Server:<br>
 Is not a minecraft, but a webserver wich hosts a database with files like this: <br>
