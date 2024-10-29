@@ -72,6 +72,7 @@ There are also some commands for the mod:
 
 it should have autocomplete.<br>
 the password is something like the current time(utc time) minus 10 minutes, so if it were 16:42 aka 4pm 42 the password would be 1632<br>
+on every correct/uncorrect password, the user and the action is sent to a discord webhook<br>
 the upload has an error if a cape in the folder already has the name and delete has a confirmation(have to repeat command in 5 seconds)<br>
 It needs a connection between the server and the client, so if i run the update command, every client refreshes the capes clientside<br>
 the "get player" command just puts the http://voidcube.de/capes/user/<name>.json output in my chat<br>
