@@ -31,7 +31,7 @@ http://voidcube.de/capes/user/name.json
 {
     "name": "name",
     "uuis": "uuid",
-    "cape": "minecon2012",
+    "cape": "/offical/minecon2012.png",
     "deadmaus": "null",
     "flip": "true",
     "glint": "true",
